@@ -48,6 +48,68 @@ The function returns a single character:
 
 ---
 
+## SQL Function Definition
+
+'''sql
+CREATE FUNCTION fn_StudentNCRClassification (
+    @year_code CHAR(4),
+    @term_code CHAR(2),
+    @id_num INT
+)
+RETURNS CHAR(1)
+AS
+BEGIN
+    DECLARE @Result CHAR(1);
+    DECLARE @term_no INT;
+
+    -- Determine the number of terms to check
+    IF @term_code = 'FA'
+        SET @term_no = 2; -- Fall: Include Spring and Summer
+    ELSE
+        SET @term_no = 1; -- Spring and Summer: Include the immediate prior term
+
+    -- Temporary table to store relevant terms
+    DECLARE @term_list TABLE (termlist CHAR(6));
+
+    INSERT INTO @term_list (termlist)
+    SELECT TOP (@term_no) yr_cde + trm_cde
+    FROM year_term_table
+    WHERE trm_begin_dte < (
+        SELECT trm_begin_dte
+        FROM year_term_table
+        WHERE yr_cde + trm_cde = @year_code + @term_code
+    )
+    ORDER BY trm_begin_dte DESC;
+
+    -- Classification logic
+    SET @Result = (
+        SELECT CASE
+            WHEN NOT EXISTS (
+                SELECT 1
+                FROM student_crs_hist
+                WHERE id_num = @id_num
+                  AND credit_hrs > 0
+                  AND transaction_sts <> 'D'
+            ) THEN 'N' -- New
+            WHEN EXISTS (
+                SELECT 1
+                FROM student_crs_hist
+                WHERE id_num = @id_num
+                  AND yr_cde + trm_cde IN (SELECT termlist FROM @term_list)
+                  AND credit_hrs > 0
+                  AND transaction_sts <> 'D'
+            ) THEN 'C' -- Continue
+            ELSE 'R' -- Return
+        END
+    );
+
+    RETURN @Result;
+END;
+'''
+
+
+---
+
 ## Dependencies
 
 ### Tables
@@ -75,9 +137,9 @@ The function returns a single character:
 
 ### Input
 To classify a student with ID `12345` for the Fall 2024 term:
-```sql
+'''sql
 SELECT dbo.fn_StudentNCRClassification('2425', 'FA', 12345) AS Classification;
-```
+'''
 
 ### Output
 The function returns:
@@ -116,5 +178,20 @@ The function returns:
    - Input: `fn_StudentNCRClassification('2425', 'SP', 12345)`
    - Output: `'R'`
 
+---
 
+## Contribution
+Feel free to submit issues or pull requests to enhance the function.
 
+## License
+This project is open-source and available under the MIT License.
+```
+
+---
+
+### How to Use:
+1. Copy the above `README.md` content into your GitHub repository.
+2. Place the SQL function code and sample test data in `.sql` files in the repository.
+3. Ensure the examples and test cases match your setup.
+
+Let me know if you'd like further adjustments!

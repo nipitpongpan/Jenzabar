@@ -25,26 +25,20 @@ The function returns a single character:
 - `'C'` for Continue.
 - `'R'` for Return.
 
-### Logic
+### Classification Logic
 
-1. **Determine Relevant Terms:**
-   - Based on the current term (`@year_code` + `@term_code`), identify the immediate prior term(s).
-   - For Fall (`'FA'`), include both Spring (`'SP'`) and Summer (`'SU'`) of the same academic year.
-   - For Spring (`'SP'`) or Summer (`'SU'`), include only the most recent prior term.
+1. **New (`N`)**:
+   - The student has no valid enrollment history in `student_crs_hist`.
 
-2. **Classify Students:**
-   - **New (`N`):**
-     - No enrollment records exist in the `student_crs_hist` table.
-   - **Continue (`C`):**
-     - The student has an enrollment record in the immediate prior term(s).
-   - **Return (`R`):**
-     - The student has prior enrollment records but not in the immediate prior term(s).
+2. **Continue (`C`)**:
+   - The student was enrolled in the **immediate prior term(s)**:
+     - **Fall (`FA`)**: Spring and Summer of the previous academic year.
+     - **Spring (`SP`)**: Fall of the previous academic year.
+     - **Summer (`SU`)**: Spring of the same academic year.
 
-3. **Validation Criteria:**
-   - Exclude:
-     - Dropped courses (`transaction_sts = 'D'`).
-     - Invalid grades (`'nw'`, `'ew'`, `'X'`).
-     - Placeholder terms (`'TRAN'`, `'ZZZZ'`).
+3. **Return (`R`)**:
+   - The student has valid enrollment records in `student_crs_hist` but **skipped the immediate prior term(s)**.
+
 
 ---
 

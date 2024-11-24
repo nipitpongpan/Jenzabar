@@ -32,7 +32,7 @@ The function returns a single character:
 
 2. **Continue (`C`)**:
    - The student was enrolled in the **immediate prior term(s)**:
-     - **Fall (`FA`)**: Spring and Summer of the previous academic year.
+     - **Fall (`FA`)**: Spring or Summer of the previous academic year.
      - **Spring (`SP`)**: Fall of the previous academic year.
      - **Summer (`SU`)**: Spring of the same academic year.
 

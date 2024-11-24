@@ -50,7 +50,7 @@ The function returns a single character:
 
 ## SQL Function Definition
 
-'''sql
+```sql
 CREATE FUNCTION fn_StudentNCRClassification (
     @year_code CHAR(4),
     @term_code CHAR(2),
@@ -105,7 +105,7 @@ BEGIN
 
     RETURN @Result;
 END;
-'''
+```
 
 
 ---
@@ -137,9 +137,9 @@ END;
 
 ### Input
 To classify a student with ID `12345` for the Fall 2024 term:
-'''sql
+```sql
 SELECT dbo.fn_StudentNCRClassification('2425', 'FA', 12345) AS Classification;
-'''
+```
 
 ### Output
 The function returns:

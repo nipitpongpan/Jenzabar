@@ -170,35 +170,49 @@ The function returns:
 
 ---
 
-## Test Cases
+### Test Cases
 
-### Sample Data
-#### `year_term_table`
+#### Sample Data
+
+**year_term_table**
 | yr_cde | trm_cde | trm_begin_dte | trm_end_dte |
 |--------|---------|---------------|-------------|
+| 2324   | FA      | 2023-08-15    | 2023-12-15  |
+| 2324   | SP      | 2024-01-15    | 2024-05-15  |
+| 2324   | SU      | 2024-06-01    | 2024-07-31  |
 | 2425   | FA      | 2024-08-15    | 2024-12-15  |
 | 2425   | SP      | 2025-01-15    | 2025-05-15  |
-| 2425   | SU      | 2025-06-01    | 2025-07-31  |
 
-#### `student_crs_hist`
+**student_crs_hist**
 | id_num | yr_cde | trm_cde | transaction_sts | grade_cde | credit_hrs |
 |--------|--------|---------|-----------------|-----------|------------|
-| 12345  | 2425   | SP      | A               | A         | 3.0        |
-| 12345  | 2425   | FA      | A               | B         | 3.0        |
+| 54321  | 2324   | FA      | A               | B         | 3.0        |
+| 12345  | 2324   | SP      | A               | A         | 3.0        |
+| 12345  | 2324   | SU      | A               | B         | 3.0        |
+| 12345  | 2425   | FA      | A               | A         | 3.0        |
 
-### Tests
-1. **New Student**:
-   - Input: `fn_StudentNCRClassification('2425', 'FA', 54321)`
-   - Output: `'N'`
-
-2. **Continuing Student**:
-   - Input: `fn_StudentNCRClassification('2425', 'FA', 12345)`
-   - Output: `'C'`
-
-3. **Returning Student**:
-   - Input: `fn_StudentNCRClassification('2425', 'SP', 12345)`
-   - Output: `'R'`
 
 ---
+
+### Tests
+
+#### New Student:
+- **Input**: `fn_StudentNCRClassification('2425', 'FA', 98765)`
+- **Output**: `'N'`
+- **Explanation**: Student ID `98765` has no enrollment records in the database.
+
+#### Continuing Student:
+- **Input**: `fn_StudentNCRClassification('2425', 'FA', 12345)`
+- **Output**: `'C'`
+- **Explanation**: Student ID `12345` was enrolled in Spring (`SP`) and Summer (`SU`) of the prior academic year `2324`.
+
+#### Returning Student:
+- **Input**: `fn_StudentNCRClassification('2425', 'FA', 54321)`
+- **Output**: `'R'`
+- **Explanation**: Student ID `54321` was enrolled in Fall (`FA`) of the prior academic year (`2324`) but skipped Spring (`SP`) and Summer (`SU`) of the same year.
+
+---
+
+
 
 

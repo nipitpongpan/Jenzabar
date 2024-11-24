@@ -180,18 +180,4 @@ The function returns:
 
 ---
 
-## Contribution
-Feel free to submit issues or pull requests to enhance the function.
 
-## License
-This project is open-source and available under the MIT License.
-```
-
----
-
-### How to Use:
-1. Copy the above `README.md` content into your GitHub repository.
-2. Place the SQL function code and sample test data in `.sql` files in the repository.
-3. Ensure the examples and test cases match your setup.
-
-Let me know if you'd like further adjustments!
